@@ -1,6 +1,7 @@
-import hello from '@functions/hello';
+
 import type { AWS } from '@serverless/typescript';
 import environment from 'environment';
+import functions from 'functions';
 import plugins from 'plugins';
 import resources from 'resources';
 
@@ -43,7 +44,7 @@ const serverlessConfiguration: AWS = {
     lambdaHashingVersion: '20201221',
   },
   // import the function via paths
-  functions: { hello },
+  functions,
   resources
 };
 
