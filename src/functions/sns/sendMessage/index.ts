@@ -4,8 +4,9 @@ export default {
   handler: `${handlerPath(__dirname)}/handler.handler`,
   events: [
     {
-      websocket: {
-        route: 'sendMessage'
+      sns: {
+        arn: 'arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev',
+        topicName: "messagesTopic-dev",
       }
     }
   ],
@@ -14,15 +15,6 @@ export default {
     API_ID: {
       Ref: "WebsocketsApi"
     },
-    MESSAGES_TOPIC_ARN: "${self:custom.messagesTopicArn}"
   },
-  iamRoleStatements: [
-    {
-      Effect: 'Allow',
-      Action: [
-        'SNS:Publish',
-      ],
-      Resource: "${self:custom.messagesTopicArn}"
-    },
-  ]
+
 }

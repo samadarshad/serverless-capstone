@@ -54,7 +54,7 @@ export default {
             Type: 'AWS::SNS::Topic',
             Properties: {
                 DisplayName: 'Messages topic',
-                TopicName: '${self:custom.messagesTopic}'
+                TopicName: '${self:provider.environment.MESSAGES_TOPIC}'
             }
         }
     }

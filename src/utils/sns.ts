@@ -8,12 +8,12 @@ export function createSns() {
     if (process.env.IS_OFFLINE) {
         console.log('Creating a local SNS instance')
         return new XAWS.SNS({
-            region: 'localhost',
-            endpoint: 'http://localhost:4002'
+            region: 'eu-west-2',
+            endpoint: 'http://127.0.0.1:4002'
         })
     }
 
-    return new XAWS.ApiGatewayManagementApi({
-        region
+    return new XAWS.SNS({
+        region: 'eu-west-2'
     })
 }

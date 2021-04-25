@@ -31,9 +31,9 @@ const serverlessConfiguration: AWS = {
     'serverless-offline-sns': {
       port: 4002,
       debug: true,
+      accountId: 324941539183
     },
-    messagesTopic: 'messagesTopic-${self:provider.stage}',
-    messagesTopicArn: { "Fn::Join": ["", ["arn:aws:sns:${self:provider.region}:", { "Ref": "AWS::AccountId" }, ":${self:custom.messagesTopic}"]] }
+    messagesTopicArn: "arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev"//"arn:aws:sns:${self:provider.region}:${self:provider.environment.accountId}:${self:provider.environment.MESSAGES_TOPIC}",
   },
   plugins,
   provider: {
