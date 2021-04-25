@@ -7,6 +7,6 @@ import 'source-map-support/register';
 export const handler: SNSHandler = async (event: SNSEvent) => {
     console.log("pong!!!");
     console.log(process.env.messagesTopicArn);
-    console.log('Processing SNS event ', event);
+    console.log('Processing SNS event ', event.Records[0].Sns.Message);
 }
 
