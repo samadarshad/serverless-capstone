@@ -2,10 +2,13 @@ import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } f
 import 'source-map-support/register'
 import { createApiGateway } from 'src/utils/apiGateway'
 import { createDynamoDBClient } from 'src/utils/dynamoDbClient'
+import { createSns } from 'src/utils/sns'
 
 const docClient = createDynamoDBClient()
+const sns = createSns()
 
 const connectionsTable = process.env.CONNECTIONS_TABLE
+const messagesTopicArn = process.env.MESSAGES_TOPIC_ARN
 
 const apiGateway = createApiGateway()
 
@@ -26,10 +29,19 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         message
     }
 
-    for (const connection of connections.Items) {
-        const connectionId = connection.id
-        await sendMessageToClient(connectionId, payload)
-    }
+
+    sns.publish({
+        Message: "hello!",
+        MessageStructure: "json",
+        TopicArn: messagesTopicArn,
+    }, () => {
+        console.log("ping");
+    });
+
+    // for (const connection of connections.Items) {
+    //     const connectionId = connection.id
+    //     await sendMessageToClient(connectionId, payload)
+    // }
 
     return {
         statusCode: 200,

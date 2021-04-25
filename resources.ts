@@ -19,6 +19,25 @@ export default {
                 TableName: "${self:provider.environment.CONNECTIONS_TABLE}"
             }
         },
+        'MessagesDynamoDBTable': {
+            Type: 'AWS::DynamoDB::Table',
+            Properties: {
+                AttributeDefinitions: [
+                    {
+                        AttributeName: 'id',
+                        AttributeType: 'S'
+                    },
+                ],
+                KeySchema: [
+                    {
+                        AttributeName: 'id',
+                        KeyType: 'HASH'
+                    }
+                ],
+                BillingMode: 'PAY_PER_REQUEST',
+                TableName: "${self:provider.environment.MESSAGES_TABLE}"
+            }
+        },
         'GatewayResponseDefault4XX': {
             Type: 'AWS::ApiGateway::GatewayResponse',
             Properties: {
@@ -31,5 +50,12 @@ export default {
                 RestApiId: { Ref: 'ApiGatewayRestApi' }
             }
         },
+        'MessagesTopic': {
+            Type: 'AWS::SNS::Topic',
+            Properties: {
+                DisplayName: 'Messages topic',
+                TopicName: '${self:custom.messagesTopic}'
+            }
+        }
     }
 }

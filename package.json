@@ -27,6 +27,7 @@
     "serverless-dynamodb-local": "^0.2.39",
     "serverless-iam-roles-per-function": "^3.1.0",
     "serverless-offline": "^6.9.0",
+    "serverless-offline-sns": "^0.68.0",
     "serverless-webpack": "^5.3.5",
     "ts-loader": "^8.0.15",
     "ts-node": "^9.1.1",
