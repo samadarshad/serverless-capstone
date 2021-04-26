@@ -22,6 +22,13 @@ export default {
         'dynamodb:Scan',
       ],
       Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}'
+    },
+    {
+      Effect: 'Allow',
+      Action: [
+        'execute-api:*',
+      ],
+      Resource: '*'
     }
   ]
 
