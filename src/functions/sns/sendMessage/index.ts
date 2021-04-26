@@ -16,5 +16,14 @@ export default {
       Ref: "WebsocketsApi"
     },
   },
+  iamRoleStatements: [
+    {
+      Effect: 'Allow',
+      Action: [
+        'dynamodb:Scan',
+      ],
+      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}'
+    }
+  ]
 
 }

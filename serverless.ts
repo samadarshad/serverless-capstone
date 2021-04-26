@@ -30,7 +30,7 @@ const serverlessConfiguration: AWS = {
     },
     'serverless-offline-sns': {
       port: 4002,
-      debug: true,
+      debug: false,
       accountId: 324941539183
     },
     messagesTopicArn: "arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev"//"arn:aws:sns:${self:provider.region}:${self:provider.environment.accountId}:${self:provider.environment.MESSAGES_TOPIC}",

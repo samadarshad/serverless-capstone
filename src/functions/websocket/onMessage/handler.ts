@@ -35,11 +35,20 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         Message: '{ "default": "hello!" }',
         MessageStructure: "json",
         TopicArn: "arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev",
-    }, () => {
-        console.log(`message sent to ${messagesTopicArn}`);
-
-        console.log("ping");
     }).promise()
+
+    console.log("ping");
+
+
+    // await sns.publish({
+    //     Message: '{ "default": "hello!" }',
+    //     MessageStructure: "json",
+    //     TopicArn: "arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev",
+    // }, () => {
+    //     console.log(`message sent to ${messagesTopicArn}`);
+
+    //     console.log("ping");
+    // }).promise()
 
     // for (const connection of connections.Items) {
     //     const connectionId = connection.id
