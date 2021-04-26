@@ -9,8 +9,4 @@ export default {
     STAGE: "${self:provider.stage}",
     REGION: "${self:provider.region}",
     MESSAGES_TOPIC: "messagesTopic-${self:provider.stage}",
-    // for local only
-    DISABLE_XRAY_TRACING: 'true',
-    _X_AMZN_TRACE_ID: '0'
-    //
 }
