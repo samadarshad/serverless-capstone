@@ -5,7 +5,8 @@ export default {
   events: [
     {
       websocket: {
-        route: '$connect'
+        route: '$connect',
+        cors: true
       }
     }
   ],

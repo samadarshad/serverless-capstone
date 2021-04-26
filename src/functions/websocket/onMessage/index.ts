@@ -5,7 +5,8 @@ export default {
   events: [
     {
       websocket: {
-        route: 'onMessage'
+        route: 'onMessage',
+        cors: true
       }
     }
   ],
