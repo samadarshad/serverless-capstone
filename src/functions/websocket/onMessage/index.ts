@@ -14,7 +14,7 @@ export default {
     API_ID: {
       Ref: "WebsocketsApi"
     },
-    MESSAGES_TOPIC_ARN: "arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev",
+    MESSAGES_TOPIC_ARN: "${self:custom.messagesTopicArn}",
   },
   iamRoleStatements: [
     {
@@ -22,7 +22,7 @@ export default {
       Action: [
         'SNS:Publish',
       ],
-      Resource: "arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev"
+      Resource: "${self:custom.messagesTopicArn}"
     },
     {
       Effect: 'Allow',

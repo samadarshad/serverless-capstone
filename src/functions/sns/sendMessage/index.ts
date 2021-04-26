@@ -5,8 +5,7 @@ export default {
   events: [
     {
       sns: {
-        arn: 'arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev',
-        topicName: "messagesTopic-dev",
+        arn: "${self:custom.messagesTopicArn}"
       }
     }
   ],

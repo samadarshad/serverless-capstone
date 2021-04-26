@@ -11,26 +11,19 @@ const apiGateway = createApiGateway()
 
 export const handler: SNSHandler = async (event: SNSEvent) => {
     console.log("pong!!!");
-    console.log(process.env.messagesTopicArn);
-    const msg = event.Records[0].Sns.Message
-    console.log('Processing SNS event ', msg);
+    console.log(event.Records[0].Sns);
 
-    const timestamp = new Date().toISOString()
+    const message = JSON.parse(event.Records[0].Sns.Message)
+    console.log('Processing SNS event ', message);
 
     const connections = await docClient.scan({
         TableName: connectionsTable
     }).promise()
 
-    const payload = {
-        timestamp,
-        msg
-    }
-
     for (const connection of connections.Items) {
         const connectionId = connection.id
-        await sendMessageToClient(connectionId, payload)
+        await sendMessageToClient(connectionId, message)
     }
-
 }
 
 async function sendMessageToClient(connectionId, payload) {
@@ -56,6 +49,5 @@ async function sendMessageToClient(connectionId, payload) {
 
         }
     }
-
 }
 
