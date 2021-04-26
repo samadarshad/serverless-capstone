@@ -5,7 +5,7 @@ export default {
   events: [
     {
       websocket: {
-        route: 'sendMessage'
+        route: 'onMessage'
       }
     }
   ],
@@ -24,13 +24,6 @@ export default {
       ],
       Resource: "${self:custom.messagesTopicArn}"
     },
-    {
-      Effect: 'Allow',
-      Action: [
-        'dynamodb:Scan',
-      ],
-      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}'
-    }
   ]
 
 }

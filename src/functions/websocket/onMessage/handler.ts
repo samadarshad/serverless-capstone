@@ -13,12 +13,14 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     const connectionId = event.requestContext.connectionId
     const timestamp = new Date().toISOString()
-    const message = JSON.parse(event.body)
+    const message = JSON.parse(event.body).message
+    const room = JSON.parse(event.body).room
 
     const payload = {
         connectionId,
         timestamp,
-        message
+        message,
+        room
     }
 
     await sns.publish({
