@@ -1,5 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
+import { joinRoom } from 'src/businessLogic/chat'
+import { JoinRoomRequest } from 'src/requests/joinRoomRequest'
 import { createDynamoDBClient } from 'src/utils/dynamoDbClient'
 
 const docClient = createDynamoDBClient()
@@ -10,32 +12,39 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     console.log('Websocket send message: ', event)
 
     const connectionId = event.requestContext.connectionId
-    const timestamp = new Date().toISOString()
+    // const timestamp = new Date().toISOString()
     const { name, room } = JSON.parse(event.body)
 
-    const payload = {
-        connectionId,
-        timestamp,
+    const request: JoinRoomRequest = {
         name,
         room
     }
+    await joinRoom(request, connectionId)
 
-    console.log("joiner", payload);
+    // const payload = {
+    //     connectionId,
+    //     timestamp,
+    //     name,
+    //     room
+    // }
 
-    await docClient.update({
-        TableName: connectionsTable,
-        Key: {
-            connectionId,
-        },
-        ExpressionAttributeNames: {
-            '#user_name': 'name'
-        },
-        UpdateExpression: "set #user_name = :name, room = :room",
-        ExpressionAttributeValues: {
-            ":name": name,
-            ":room": room,
-        }
-    }).promise()
+    // console.log("joiner", payload);
+
+
+    // await docClient.update({
+    //     TableName: connectionsTable,
+    //     Key: {
+    //         connectionId,
+    //     },
+    //     ExpressionAttributeNames: {
+    //         '#user_name': 'name'
+    //     },
+    //     UpdateExpression: "set #user_name = :name, room = :room",
+    //     ExpressionAttributeValues: {
+    //         ":name": name,
+    //         ":room": room,
+    //     }
+    // }).promise()
 
     return {
         statusCode: 200,

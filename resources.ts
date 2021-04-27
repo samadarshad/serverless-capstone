@@ -8,6 +8,10 @@ export default {
                         AttributeName: 'connectionId',
                         AttributeType: 'S'
                     },
+                    {
+                        AttributeName: 'userId',
+                        AttributeType: 'S'
+                    },
                 ],
                 KeySchema: [
                     {
@@ -16,7 +20,21 @@ export default {
                     }
                 ],
                 BillingMode: 'PAY_PER_REQUEST',
-                TableName: "${self:provider.environment.CONNECTIONS_TABLE}"
+                TableName: "${self:provider.environment.CONNECTIONS_TABLE}",
+                GlobalSecondaryIndexes: [
+                    {
+                        IndexName: "${self:provider.environment.USER_ID_INDEX}",
+                        KeySchema: [
+                            {
+                                AttributeName: 'userId',
+                                KeyType: 'HASH'
+                            }
+                        ],
+                        Projection: {
+                            ProjectionType: 'ALL'
+                        }
+                    }
+                ]
             }
         },
         'UsersDynamoDBTable': {

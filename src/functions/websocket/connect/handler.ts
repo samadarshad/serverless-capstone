@@ -1,7 +1,8 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
 import 'source-map-support/register'
+import { login } from 'src/businessLogic/login'
+import { AddConnectionRequest } from 'src/requests/addConnectionRequest'
 import { createDynamoDBClient } from 'src/utils/dynamoDbClient'
-
 const docClient = createDynamoDBClient()
 
 const connectionsTable = process.env.CONNECTIONS_TABLE
@@ -10,17 +11,25 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     console.log('Websocket connect: ', event)
 
     const connectionId = event.requestContext.connectionId
-    const timestamp = new Date().toISOString()
+    const userId = "mockuser"
 
-    const item = {
+    const addConnectionRequest: AddConnectionRequest = {
         connectionId,
-        timestamp
+        userId
     }
 
-    await docClient.put({
-        TableName: connectionsTable,
-        Item: item
-    }).promise()
+    await login(addConnectionRequest)
+    // const timestamp = new Date().toISOString()
+
+    // const item = {
+    //     connectionId,
+    //     timestamp
+    // }
+
+    // await docClient.put({
+    //     TableName: connectionsTable,
+    //     Item: item
+    // }).promise()
 
     return {
         statusCode: 200,
