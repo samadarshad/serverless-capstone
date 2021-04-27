@@ -5,13 +5,13 @@ export default {
             Properties: {
                 AttributeDefinitions: [
                     {
-                        AttributeName: 'id',
+                        AttributeName: 'connectionId',
                         AttributeType: 'S'
                     },
                 ],
                 KeySchema: [
                     {
-                        AttributeName: 'id',
+                        AttributeName: 'connectionId',
                         KeyType: 'HASH'
                     }
                 ],
@@ -19,19 +19,68 @@ export default {
                 TableName: "${self:provider.environment.CONNECTIONS_TABLE}"
             }
         },
-        'MessagesDynamoDBTable': {
+        'UsersDynamoDBTable': {
             Type: 'AWS::DynamoDB::Table',
             Properties: {
                 AttributeDefinitions: [
                     {
-                        AttributeName: 'id',
+                        AttributeName: 'userId',
+                        AttributeType: 'S'
+                    },
+                    {
+                        AttributeName: 'room',
                         AttributeType: 'S'
                     },
                 ],
                 KeySchema: [
                     {
-                        AttributeName: 'id',
+                        AttributeName: 'room',
                         KeyType: 'HASH'
+                    },
+                    {
+                        AttributeName: 'userId',
+                        KeyType: 'RANGE'
+                    }
+                ],
+                BillingMode: 'PAY_PER_REQUEST',
+                TableName: "${self:provider.environment.USERS_TABLE}",
+                GlobalSecondaryIndexes: [
+                    {
+                        IndexName: "${self:provider.environment.USER_ID_INDEX}",
+                        KeySchema: [
+                            {
+                                AttributeName: 'userId',
+                                KeyType: 'HASH'
+                            }
+                        ],
+                        Projection: {
+                            ProjectionType: 'ALL'
+                        }
+                    }
+                ]
+            }
+        },
+        'MessagesDynamoDBTable': {
+            Type: 'AWS::DynamoDB::Table',
+            Properties: {
+                AttributeDefinitions: [
+                    {
+                        AttributeName: 'room',
+                        AttributeType: 'S'
+                    },
+                    {
+                        AttributeName: 'postedAt',
+                        AttributeType: 'S'
+                    },
+                ],
+                KeySchema: [
+                    {
+                        AttributeName: 'room',
+                        KeyType: 'HASH'
+                    },
+                    {
+                        AttributeName: 'postedAt',
+                        KeyType: 'RANGE'
                     }
                 ],
                 BillingMode: 'PAY_PER_REQUEST',

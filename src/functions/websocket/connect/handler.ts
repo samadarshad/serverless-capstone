@@ -13,7 +13,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const timestamp = new Date().toISOString()
 
     const item = {
-        id: connectionId,
+        connectionId,
         timestamp
     }
 

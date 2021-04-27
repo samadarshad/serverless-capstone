@@ -12,7 +12,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const connectionId = event.requestContext.connectionId
 
     const key = {
-        id: connectionId
+        connectionId
     }
 
     await docClient.delete({

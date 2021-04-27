@@ -29,7 +29,7 @@ async function broadcastToRoom(message: Message) {
     }).promise()
 
     for (const connection of connections.Items) {
-        const connectionId = connection.id
+        const connectionId = connection.connectionId
 
         await sendMessageToClient(connectionId, message)
     }
@@ -37,12 +37,12 @@ async function broadcastToRoom(message: Message) {
 
 async function getUser(connectionId) {
 
-    console.log("getting user from id: ", connectionId);
+    console.log("getting user from connectionId: ", connectionId);
     const result = await docClient.query({
         TableName: connectionsTable,
-        KeyConditionExpression: 'id = :id',
+        KeyConditionExpression: 'connectionId = :connectionId',
         ExpressionAttributeValues: {
-            ':id': connectionId
+            ':connectionId': connectionId
         }
     }).promise()
     console.log("result", result);
@@ -82,7 +82,7 @@ async function sendMessageToClient(connectionId, payload: Message) {
             await docClient.delete({
                 TableName: connectionsTable,
                 Key: {
-                    id: connectionId
+                    connectionId
                 }
             }).promise()
 
