@@ -10,23 +10,62 @@ const connectionsTable = process.env.CONNECTIONS_TABLE
 const apiGateway = createApiGateway()
 
 export const handler: SNSHandler = async (event: SNSEvent) => {
-    console.log("pong!!!");
-    console.log(event.Records[0].Sns);
+    const data = JSON.parse(event.Records[0].Sns.Message)
+    const user = await getUser(data.connectionId)
+    console.log("user", user);
 
-    const message = JSON.parse(event.Records[0].Sns.Message)
-    console.log('Processing SNS event ', message);
+    const text = data.message
+    const payload: Message = {
+        user,
+        text,
+    }
 
+    await broadcastToRoom(payload)
+}
+
+async function broadcastToRoom(message: Message) {
     const connections = await docClient.scan({
         TableName: connectionsTable
     }).promise()
 
     for (const connection of connections.Items) {
         const connectionId = connection.id
+
         await sendMessageToClient(connectionId, message)
     }
 }
 
-async function sendMessageToClient(connectionId, payload) {
+async function getUser(connectionId) {
+
+    console.log("getting user from id: ", connectionId);
+    const result = await docClient.query({
+        TableName: connectionsTable,
+        KeyConditionExpression: 'id = :id',
+        ExpressionAttributeValues: {
+            ':id': connectionId
+        }
+    }).promise()
+    console.log("result", result);
+    if (result.Count !== 0) {
+        const name = result.Items[0].name
+
+        console.log("found username", name);
+
+        return name
+    } else {
+        console.log("didnt find connection");
+        return "no username"
+        // return connectionId.slice(-5)
+        // return null
+    }
+}
+
+interface Message {
+    user: string
+    text: string
+}
+
+async function sendMessageToClient(connectionId, payload: Message) {
     try {
         console.log('Sending message to a connection', connectionId);
 
