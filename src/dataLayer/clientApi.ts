@@ -10,7 +10,7 @@ export class ClientApi {
         private readonly apiGateway: ApiGatewayManagementApi = createApiGateway(),
     ) { }
 
-    async sendMessage(connectionId, payload: Message) {
+    async sendMessage(connectionId: string, payload: Message) {
         logger.info('sendMessageToClient', {
             connectionId,
             payload
