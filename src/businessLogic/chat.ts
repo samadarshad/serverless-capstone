@@ -29,10 +29,10 @@ export async function broadcastMessageToRoom(request: OnMessage) {
 
 export async function joinRoom(connectionId: string, request: OnJoinRequest) {
 
-    const joinRequest: OnJoin = {
+    const join: OnJoin = {
         connectionId,
         ...request
     }
 
-    await connectionsAccess.joinRoom(joinRequest)
+    await connectionsAccess.joinRoom(join)
 }

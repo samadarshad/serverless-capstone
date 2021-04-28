@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "sls offline & npm run dynamodb-offline",
-    "dynamodb-offline": "sls dynamodb start"
+    "dynamodb-offline": "sls dynamodb start",
+    "generate": "ts-interface-builder src/requests/*.ts -o src/requests/generated"
   },
   "engines": {
     "node": ">=14.15.0"
