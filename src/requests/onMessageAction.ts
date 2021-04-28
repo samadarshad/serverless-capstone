@@ -1,7 +1,7 @@
 export interface OnMessageAction {
     room: string
-    message: string
+    message?: string
+    postedAt?: string
+    subAction: string
     connectionId: string
-    postedAt: string
-    action: string
 }

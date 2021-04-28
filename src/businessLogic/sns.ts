@@ -1,5 +1,5 @@
-import { OnMessageAction } from '@models/onMessageAction';
 import 'source-map-support/register';
+import { OnMessageAction } from 'src/requests/onMessageAction';
 import { createSns } from 'src/utils/sns';
 
 const sns = createSns()

@@ -5,8 +5,8 @@ import { errorToHttp } from 'src/businessLogic/errors';
 import { publishMessageInternally } from 'src/businessLogic/sns';
 import { ClientApi } from 'src/dataLayer/clientApi';
 import { createCheckers } from "ts-interface-checker";
-import OnMessageRequestTI from "../../../requests/generated/onMessageRequest-ti";
-const { OnMessageRequest: OnMessageRequestChecker } = createCheckers(OnMessageRequestTI)
+import OnMessageActionTI from "../../../requests/generated/onMessageAction-ti";
+const { OnMessageAction: OnMessageActionChecker } = createCheckers(OnMessageActionTI)
 
 const clientApi = new ClientApi()
 
@@ -16,7 +16,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const request = JSON.parse(event.body)
 
     try {
-        OnMessageRequestChecker.check(request)
+        OnMessageActionChecker.check(request)
     } catch (error) {
         await clientApi.sendMessage(connectionId, {
             statusCode: StatusCodes.BAD_REQUEST,

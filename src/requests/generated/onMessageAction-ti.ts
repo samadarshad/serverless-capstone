@@ -4,13 +4,14 @@
 import * as t from "ts-interface-checker";
 // tslint:disable:object-literal-key-quotes
 
-export const OnMessageDeleteRequest = t.iface([], {
+export const OnMessageAction = t.iface([], {
   "room": "string",
-  "name": "string",
-  "postedAt": "string",
+  "message": t.opt("string"),
+  "postedAt": t.opt("string"),
+  "subAction": "string",
 });
 
 const exportedTypeSuite: t.ITypeSuite = {
-  OnMessageDeleteRequest,
+  OnMessageAction,
 };
 export default exportedTypeSuite;

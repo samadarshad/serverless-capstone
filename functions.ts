@@ -4,7 +4,6 @@ import connect from '@functions/websocket/connect';
 import disconnect from '@functions/websocket/disconnect';
 import onJoin from '@functions/websocket/onJoin';
 import onMessage from '@functions/websocket/onMessage';
-import onMessageDelete from '@functions/websocket/onMessageDelete';
 
 export default {
   hello,
@@ -13,5 +12,4 @@ export default {
   onMessage,
   sendMessage,
   onJoin,
-  onMessageDelete
 }
