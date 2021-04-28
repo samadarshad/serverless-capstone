@@ -11,7 +11,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     console.log('Websocket connect: ', event)
 
     const connectionId = event.requestContext.connectionId
-    const userId = "mockuser"
+
+    //TODO authenticate user and get userId from token https://codeburst.io/how-to-build-a-react-chat-app-with-aws-api-gateway-websockets-and-cognito-custom-authorizer-6f84f2da47ec
+    const userId = event.queryStringParameters.token
 
     const addConnectionRequest: AddConnectionRequest = {
         connectionId,

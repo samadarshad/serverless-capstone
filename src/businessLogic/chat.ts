@@ -22,11 +22,11 @@ export async function broadcastMessageToRoom(request: SendMessageRequest) {
         ...request
     }
 
+    //TODO merge users and connections table together so that we dont have to do the below
     const users = await userAccess.getUsers(user.room)
-    console.log("users", users);
 
     for (const user of users) {
-        clientApi.sendMessageToUser(payload, user.userId)
+        await clientApi.sendMessageToUser(payload, user.userId)
     }
 }
 

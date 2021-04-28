@@ -23,6 +23,8 @@ export class ClientApi {
             ConnectionId: connectionId,
             Data: JSON.stringify(payload)
         }).promise()
+        console.log("sent!");
+
     }
 
     async sendMessageToUser(payload: Message | ErrorResponse, userId: string) {
