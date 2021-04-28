@@ -1,7 +1,10 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
-import { validate } from 'jsonschema';
 import 'source-map-support/register';
 import { createSns } from 'src/utils/sns';
+import { createCheckers } from "ts-interface-checker";
+import OnMessageRequestTI from "../../../requests/generated/onMessageRequest-ti";
+const { OnMessageRequestChecker } = createCheckers(OnMessageRequestTI)
+
 const sns = createSns()
 
 const messagesTopicArn = process.env.MESSAGES_TOPIC_ARN
@@ -23,25 +26,25 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     //     asd: "hi"
     // }
     console.log("req: ", request);
+    OnMessageRequestChecker.check(request)
 
-
-    var mySchema = {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "properties": {
-            "message": {
-                "type": "string"
-            },
-            "room": {
-                "type": "string"
-            }
-        },
-        "required": [
-            "message",
-            "room"
-        ],
-        "type": "object",
-    }
-    console.log(validate(request, mySchema).valid);
+    // var mySchema = {
+    //     "$schema": "http://json-schema.org/draft-07/schema#",
+    //     "properties": {
+    //         "message": {
+    //             "type": "string"
+    //         },
+    //         "room": {
+    //             "type": "string"
+    //         }
+    //     },
+    //     "required": [
+    //         "message",
+    //         "room"
+    //     ],
+    //     "type": "object",
+    // }
+    // console.log(validate(request, mySchema).valid);
 
     // var schema2 = { "type": "number" };
     // console.log(validate("abc", schema2));
