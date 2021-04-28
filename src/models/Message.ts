@@ -1,5 +1,7 @@
-import { SendMessageRequest } from 'src/requests/sendMessageRequest';
-
-export interface Message extends SendMessageRequest {
-    name?: string
+export interface Message {
+    name: string
+    room: string
+    message: string
+    postedAt: string
+    userId: string
 }

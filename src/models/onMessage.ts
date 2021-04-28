@@ -1,4 +1,4 @@
-export interface SendMessageRequest {
+export interface OnMessage {
     room: string
     message: string
     connectionId: string

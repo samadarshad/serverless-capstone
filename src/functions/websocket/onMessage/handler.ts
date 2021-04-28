@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } f
 import { StatusCodes } from 'http-status-codes';
 import 'source-map-support/register';
 import { errorToHttp } from 'src/businessLogic/errors';
-import { publishMessage } from 'src/businessLogic/sns';
+import { publishMessageInternally } from 'src/businessLogic/sns';
 import { ClientApi } from 'src/dataLayer/clientApi';
 import { createCheckers } from "ts-interface-checker";
 import OnMessageRequestTI from "../../../requests/generated/onMessageRequest-ti";
@@ -26,7 +26,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     }
 
     try {
-        await publishMessage(connectionId, request)
+        await publishMessageInternally(connectionId, request)
     } catch (error) {
         await clientApi.sendMessage(connectionId, errorToHttp(error))
         return

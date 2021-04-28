@@ -15,31 +15,6 @@ export class ConnectionsAccess {
 
     ) { }
 
-    async getByUserId(userId: string): Promise<Connection | null> {
-        logger.info('getByUserId', {
-            userId
-        })
-
-        const result = await this.docClient.query({
-            TableName: this.connectionsTable,
-            IndexName: this.userIdIndex,
-            KeyConditionExpression: 'userId = :userId',
-            ExpressionAttributeValues: {
-                ':userId': userId
-            }
-        }).promise()
-        logger.info('result', {
-            result
-        })
-
-        if (result.Count !== 0) {
-            const item = result.Items[0]
-            return item as Connection
-        } else {
-            return null
-        }
-    }
-
     async getByConnectionId(connectionId: string): Promise<Connection | null> {
         logger.info('getByConnectionId', {
             connectionId
@@ -75,6 +50,21 @@ export class ConnectionsAccess {
         }).promise()
 
         return connection
+    }
+
+    async deleteConnection(connectionId: string) {
+        logger.info('deleteConnection', {
+            connectionId
+        })
+
+        await this.docClient.delete({
+            TableName: this.connectionsTable,
+            Key: {
+                connectionId
+            }
+        }).promise()
+
+        return
     }
 
     async getByRoom(room: string): Promise<Connection[]> {
