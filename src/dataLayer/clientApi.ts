@@ -23,7 +23,6 @@ export class ClientApi {
             ConnectionId: connectionId,
             Data: JSON.stringify(payload)
         }).promise()
-        console.log("sent!");
 
     }
 
