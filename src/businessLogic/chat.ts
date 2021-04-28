@@ -1,9 +1,9 @@
-import { Message } from '@models/Message'
 import { ClientApi } from 'src/dataLayer/clientApi'
 import { ConnectionsAccess } from 'src/dataLayer/connectionsAccess'
 import { JoinRoomRequest } from 'src/requests/joinRoomRequest'
 import { OnJoinRequest } from 'src/requests/onJoinRequest'
 import { SendMessageRequest } from 'src/requests/sendMessageRequest'
+import { SendMessageResponse } from 'src/responses/sendMessageResponse'
 import { createLogger } from '../utils/logger'
 
 const connectionsAccess = new ConnectionsAccess()
@@ -12,10 +12,12 @@ const logger = createLogger('chat')
 
 export async function broadcastMessageToRoom(request: SendMessageRequest) {
     const name = await (await connectionsAccess.getByConnectionId(request.connectionId)).name
-
-    const payload: Message = {
+    const { room, message, postedAt } = request
+    const payload: SendMessageResponse = {
         name,
-        ...request
+        room,
+        message,
+        postedAt
     }
 
     const connections = await connectionsAccess.getByRoom(request.room)

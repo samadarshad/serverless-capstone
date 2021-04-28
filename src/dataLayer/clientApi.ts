@@ -1,19 +1,17 @@
 import { ApiGatewayManagementApi } from 'aws-sdk';
-import { Message } from 'src/models/Message';
+import { SendMessageResponse } from 'src/responses/sendMessageResponse';
 import { createApiGateway } from 'src/utils/apiGateway';
 import { ErrorResponse } from '../responses/errorResponse';
 import { createLogger } from '../utils/logger';
-import { ConnectionsAccess } from './connectionsAccess';
 
 const logger = createLogger('ClientApi')
 
 export class ClientApi {
     constructor(
         private readonly apiGateway: ApiGatewayManagementApi = createApiGateway(),
-        private readonly connectionsAccess = new ConnectionsAccess()
     ) { }
 
-    async sendMessage(connectionId: string, payload: Message | ErrorResponse) {
+    async sendMessage(connectionId: string, payload: SendMessageResponse | ErrorResponse) {
         logger.info('sendMessageToClient', {
             connectionId,
             payload
@@ -24,10 +22,5 @@ export class ClientApi {
             Data: JSON.stringify(payload)
         }).promise()
 
-    }
-
-    async sendMessageToUser(payload: Message | ErrorResponse, userId: string) {
-        const connection = await this.connectionsAccess.getByUserId(userId)
-        await this.sendMessage(connection.connectionId, payload)
     }
 }

@@ -1,3 +1,5 @@
 export interface SendMessageResponse {
-    text: string
+    name: string
+    message: string
+    room: string
 }
