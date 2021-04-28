@@ -48,7 +48,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     }
 
     await clientApi.sendMessage(connectionId, {
-        statusCode: 200,
+        statusCode: StatusCodes.OK,
         body: ''
     })
 
