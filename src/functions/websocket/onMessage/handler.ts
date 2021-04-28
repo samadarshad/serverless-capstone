@@ -1,76 +1,56 @@
 import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
+import { StatusCodes } from 'http-status-codes';
 import 'source-map-support/register';
+import { errorToHttp } from 'src/businessLogic/errors';
+import { ClientApi } from 'src/dataLayer/clientApi';
+import { SendMessageRequest } from 'src/requests/sendMessageRequest';
 import { createSns } from 'src/utils/sns';
 import { createCheckers } from "ts-interface-checker";
 import OnMessageRequestTI from "../../../requests/generated/onMessageRequest-ti";
-const { OnMessageRequestChecker } = createCheckers(OnMessageRequestTI)
 
 const sns = createSns()
-
 const messagesTopicArn = process.env.MESSAGES_TOPIC_ARN
-
-
+const { OnMessageRequest } = createCheckers(OnMessageRequestTI)
+const clientApi = new ClientApi()
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    console.log('Websocket send message: ', event)
-    console.log(messagesTopicArn);
-    console.log("arn:aws:sns:eu-west-2:324941539183:messagesTopic-dev");
-
+    console.log('Websocket onMessage: ', event)
     const connectionId = event.requestContext.connectionId
-    const timestamp = new Date().toISOString()
-    const message = JSON.parse(event.body).message
-    const room = JSON.parse(event.body).room
-
     const request = JSON.parse(event.body)
-    // const request = {
-    //     asd: "hi"
-    // }
-    console.log("req: ", request);
-    OnMessageRequestChecker.check(request)
 
-    // var mySchema = {
-    //     "$schema": "http://json-schema.org/draft-07/schema#",
-    //     "properties": {
-    //         "message": {
-    //             "type": "string"
-    //         },
-    //         "room": {
-    //             "type": "string"
-    //         }
-    //     },
-    //     "required": [
-    //         "message",
-    //         "room"
-    //     ],
-    //     "type": "object",
-    // }
-    // console.log(validate(request, mySchema).valid);
+    try {
+        OnMessageRequest.check(request)
+    } catch (error) {
+        await clientApi.sendMessage(connectionId, {
+            statusCode: StatusCodes.BAD_REQUEST,
+            body: error.message
+        })
+        return
+    }
 
-    // var schema2 = { "type": "number" };
-    // console.log(validate("abc", schema2));
+    try {
+        const payload: SendMessageRequest = {
+            ...request,
+            connectionId,
+            timestamp: new Date().toISOString(),
+        }
 
+        await sns.publish({
+            Message: JSON.stringify({
+                default: JSON.stringify(payload)
+            }),
+            MessageStructure: "json",
+            TopicArn: messagesTopicArn,
+        }).promise()
+    } catch (error) {
+        await clientApi.sendMessage(connectionId, errorToHttp(error))
+        return
+    }
 
-
-
-    // const payload = {
-    //     connectionId,
-    //     timestamp,
-    //     message,
-    //     room
-    // }
-
-    // await sns.publish({
-    //     Message: JSON.stringify({
-    //         default: JSON.stringify(payload)
-    //     }),
-    //     MessageStructure: "json",
-    //     TopicArn: messagesTopicArn,
-    // }).promise()
-
-    // console.log("ping");
-
-    return {
+    await clientApi.sendMessage(connectionId, {
         statusCode: 200,
         body: ''
-    }
+    })
+
+    return
 }
