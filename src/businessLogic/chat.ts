@@ -3,6 +3,7 @@ import { ClientApi } from 'src/dataLayer/clientApi'
 import { ConnectionsAccess } from 'src/dataLayer/connectionsAccess'
 import { Message } from 'src/models/Message'
 import { JoinRoomRequest } from 'src/requests/joinRoomRequest'
+import { OnJoinRequest } from 'src/requests/onJoinRequest'
 import { SendMessageRequest } from 'src/requests/sendMessageRequest'
 import { createLogger } from '../utils/logger'
 
@@ -26,6 +27,12 @@ export async function broadcastMessageToRoom(request: SendMessageRequest) {
     }
 }
 
-export async function joinRoom(request: JoinRoomRequest) {
-    await connectionsAccess.joinRoom(request)
+export async function joinRoom(connectionId: string, request: OnJoinRequest) {
+
+    const joinRequest: JoinRoomRequest = {
+        connectionId,
+        ...request
+    }
+
+    await connectionsAccess.joinRoom(joinRequest)
 }
