@@ -1,6 +1,6 @@
 import { SNSEvent, SNSHandler } from 'aws-lambda';
 import 'source-map-support/register';
-import { SendMessageRequest } from 'src/requests/sendMessageRequest';
+import { SendMessageResponse } from 'src/responses/sendMessageResponse';
 import { createApiGateway } from 'src/utils/apiGateway';
 import { createDynamoDBClient } from 'src/utils/dynamoDbClient';
 import { broadcastMessageToRoom } from '../../../businessLogic/chat';
@@ -14,7 +14,7 @@ export const handler: SNSHandler = async (event: SNSEvent) => {
     const data = JSON.parse(event.Records[0].Sns.Message)
     const connectionId = data.connectionId
     const text = data.message
-    const request: SendMessageRequest = {
+    const request: SendMessageResponse = {
         text
     }
 

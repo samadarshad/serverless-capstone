@@ -3,7 +3,7 @@ import { ConnectionsAccess } from 'src/dataLayer/connectionsAccess'
 import { Message } from 'src/models/Message'
 import { User } from 'src/models/User'
 import { JoinRoomRequest } from 'src/requests/joinRoomRequest'
-import { SendMessageRequest } from 'src/requests/sendMessageRequest'
+import { SendMessageResponse } from 'src/responses/sendMessageResponse'
 import { UserAccess } from '../dataLayer/usersAccess'
 import { createLogger } from '../utils/logger'
 
@@ -13,7 +13,7 @@ const connectionsAccess = new ConnectionsAccess()
 const clientApi = new ClientApi()
 const logger = createLogger('chat')
 
-export async function broadcastMessageToRoom(request: SendMessageRequest, connectionId: string) {
+export async function broadcastMessageToRoom(request: SendMessageResponse, connectionId: string) {
     const connection = await connectionsAccess.getByConnectionId(connectionId)
     console.log("connection:", connection);
 

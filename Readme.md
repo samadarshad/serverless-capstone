@@ -1,0 +1,1 @@
+typescript-json-schema "src/requests/onMessageRequest.ts" OnMessageRequest --out models/on-message-request.json --required

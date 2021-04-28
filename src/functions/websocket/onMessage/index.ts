@@ -6,7 +6,12 @@ export default {
     {
       websocket: {
         route: 'onMessage',
-        cors: true
+        cors: true,
+        request: {
+          schema: {
+            'application/json': '${file(models/on-message-request.json)}'
+          }
+        }
       }
     }
   ],
