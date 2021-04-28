@@ -15,7 +15,7 @@ export async function login(request: AddConnectionRequest):
     Promise<Connection> {
     const connection: Connection = {
         ...request,
-        timestamp: new Date().toISOString()
+        connectedAt: new Date().toISOString()
     }
     return await connectionsAccess.addConnection(connection)
 }

@@ -4,13 +4,14 @@
 import * as t from "ts-interface-checker";
 // tslint:disable:object-literal-key-quotes
 
-export const JoinRoomRequest = t.iface([], {
+export const SendMessageRequest = t.iface([], {
   "room": "string",
-  "name": "string",
+  "message": "string",
   "connectionId": "string",
+  "timestamp": "string",
 });
 
 const exportedTypeSuite: t.ITypeSuite = {
-  JoinRoomRequest,
+  SendMessageRequest,
 };
 export default exportedTypeSuite;

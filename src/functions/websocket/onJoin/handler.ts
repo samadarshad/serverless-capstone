@@ -1,25 +1,56 @@
-import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda'
-import 'source-map-support/register'
-import { joinRoom } from 'src/businessLogic/chat'
-import { JoinRoomRequest } from 'src/requests/joinRoomRequest'
-import { createDynamoDBClient } from 'src/utils/dynamoDbClient'
+import { APIGatewayProxyEvent, APIGatewayProxyHandler, APIGatewayProxyResult } from 'aws-lambda';
+import { StatusCodes } from 'http-status-codes';
+import 'source-map-support/register';
+import { joinRoom } from 'src/businessLogic/chat';
+import { errorToHttp } from 'src/businessLogic/errors';
+import { ClientApi } from 'src/dataLayer/clientApi';
+import { ConnectionsAccess } from 'src/dataLayer/connectionsAccess';
+import { JoinRoomRequest } from 'src/requests/joinRoomRequest';
+import { createDynamoDBClient } from 'src/utils/dynamoDbClient';
+import { createCheckers } from "ts-interface-checker";
+import OnJoinRequestTI from "../../../requests/generated/onJoinRequest-ti";
+const { OnJoinRequest } = createCheckers(OnJoinRequestTI)
 
 const docClient = createDynamoDBClient()
 
 const connectionsTable = process.env.CONNECTIONS_TABLE
+const clientApi = new ClientApi()
+const connectionsAccess = new ConnectionsAccess()
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    console.log('Websocket send message: ', event)
-
+    console.log('Websocket onJoin: ', event)
     const connectionId = event.requestContext.connectionId
-    // const timestamp = new Date().toISOString()
-    const { name, room } = JSON.parse(event.body)
+    const request = JSON.parse(event.body)
 
-    const request: JoinRoomRequest = {
-        name,
-        room
+    try {
+        OnJoinRequest.check(request)
+    } catch (error) {
+        await clientApi.sendMessage(connectionId, {
+            statusCode: StatusCodes.BAD_REQUEST,
+            body: error.message
+        })
+        return
     }
-    await joinRoom(request, connectionId)
+
+    try {
+        const user = await connectionsAccess.getByConnectionId(connectionId)
+
+        const joinRequest: JoinRoomRequest = {
+            ...request,
+            ...user
+        }
+        await joinRoom(joinRequest)
+    } catch (error) {
+        await clientApi.sendMessage(connectionId, errorToHttp(error))
+        return
+    }
+
+    // const request: JoinRoomRequest = {
+    //     name,
+    //     room,
+    //     connectionId
+    // }
+    // await joinRoom(request)
 
     // const payload = {
     //     connectionId,
@@ -46,8 +77,10 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     //     }
     // }).promise()
 
-    return {
-        statusCode: 200,
+    await clientApi.sendMessage(connectionId, {
+        statusCode: StatusCodes.OK,
         body: ''
-    }
+    })
+
+    return
 }
