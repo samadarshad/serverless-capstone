@@ -33,11 +33,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     }
 
     try {
-        const user = await connectionsAccess.getByConnectionId(connectionId)
-
         const joinRequest: JoinRoomRequest = {
-            ...request,
-            ...user
+            connectionId,
+            ...request
         }
         await joinRoom(joinRequest)
     } catch (error) {

@@ -12,6 +12,10 @@ export default {
                         AttributeName: 'userId',
                         AttributeType: 'S'
                     },
+                    {
+                        AttributeName: 'room',
+                        AttributeType: 'S'
+                    },
                 ],
                 KeySchema: [
                     {
@@ -33,41 +37,12 @@ export default {
                         Projection: {
                             ProjectionType: 'ALL'
                         }
-                    }
-                ]
-            }
-        },
-        'UsersDynamoDBTable': {
-            Type: 'AWS::DynamoDB::Table',
-            Properties: {
-                AttributeDefinitions: [
-                    {
-                        AttributeName: 'userId',
-                        AttributeType: 'S'
                     },
                     {
-                        AttributeName: 'room',
-                        AttributeType: 'S'
-                    },
-                ],
-                KeySchema: [
-                    {
-                        AttributeName: 'room',
-                        KeyType: 'HASH'
-                    },
-                    {
-                        AttributeName: 'userId',
-                        KeyType: 'RANGE'
-                    }
-                ],
-                BillingMode: 'PAY_PER_REQUEST',
-                TableName: "${self:provider.environment.USERS_TABLE}",
-                GlobalSecondaryIndexes: [
-                    {
-                        IndexName: "${self:provider.environment.USER_ID_INDEX}",
+                        IndexName: "${self:provider.environment.ROOM_INDEX}",
                         KeySchema: [
                             {
-                                AttributeName: 'userId',
+                                AttributeName: 'room',
                                 KeyType: 'HASH'
                             }
                         ],

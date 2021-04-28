@@ -1,5 +1,7 @@
 export interface Connection {
-    userId: string
+    userId?: string
+    name?: string
     connectionId: string
-    connectedAt: string
+    connectedAt?: string
+    room?: string
 }

@@ -32,11 +32,11 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     }
 
     try {
-        const user = await connectionsAccess.getByConnectionId(connectionId)
+        // const user = await connectionsAccess.getByConnectionId(connectionId)
 
         const payload: SendMessageRequest = {
             ...request,
-            ...user,
+            connectionId,
             postedAt: new Date().toISOString(),
         }
 

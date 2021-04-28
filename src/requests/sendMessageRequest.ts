@@ -1,6 +1,6 @@
 export interface SendMessageRequest {
     room: string
     message: string
-    userId: string
+    connectionId: string
     postedAt: string
 }
