@@ -5,11 +5,20 @@ import { createSns } from 'src/utils/sns';
 const sns = createSns()
 const messagesTopicArn = process.env.MESSAGES_TOPIC_ARN
 
-export async function publishMessageInternally(connectionId: string, request) {
-    const payload: OnMessageAction = {
-        ...request,
-        connectionId,
-        postedAt: new Date().toISOString(),
+export async function publishMessageInternally(connectionId: string, request: OnMessageAction) {
+    let payload: OnMessageAction
+
+    if (request.subAction === "send") {
+        payload = {
+            ...request,
+            connectionId,
+            postedAt: new Date().toISOString(),
+        }
+    } else {
+        payload = {
+            ...request,
+            connectionId
+        }
     }
 
     await sns.publish({
