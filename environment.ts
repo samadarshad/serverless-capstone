@@ -11,5 +11,6 @@ export default {
     MESSAGES_TOPIC: "messagesTopic-${self:provider.stage}",
     USER_ID_INDEX: "UserIdIndex",
     USERS_TABLE: "capstone-users-${self:provider.stage}",
-    ROOM_INDEX: "RoomIndex"
+    ROOM_INDEX: "RoomIndex",
+    JWKS_URL: "https://samadarshad.eu.auth0.com/.well-known/jwks.json"
 }
