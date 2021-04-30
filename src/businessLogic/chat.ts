@@ -11,15 +11,15 @@ const clientApi = new ClientApi()
 const logger = createLogger('chat')
 
 export async function broadcastMessageToRoom(request: OnMessageAction) {
-    const { name, userId } = await (await connectionsAccess.getByConnectionId(request.connectionId))
-    const { room, message, postedAt, subAction } = request
+    const { name, userId } = await connectionsAccess.getByConnectionId(request.connectionId)
+    const { room, message, postedAt, isDeleted } = request
     const payload: SendMessageResponse = {
         name,
         userId,
         room,
         message,
         postedAt,
-        subAction
+        isDeleted
     }
 
     const connections = await connectionsAccess.getByRoom(request.room)

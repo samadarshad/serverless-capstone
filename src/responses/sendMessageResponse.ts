@@ -4,5 +4,5 @@ export interface SendMessageResponse {
     message: string
     room: string
     postedAt: string
-    subAction: string
+    isDeleted?: boolean
 }
