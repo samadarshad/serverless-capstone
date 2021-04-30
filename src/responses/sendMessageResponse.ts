@@ -1,8 +1,9 @@
 export interface SendMessageResponse {
-    name: string
+    name?: string
     userId: string
-    message: string
+    message?: string
     room: string
     postedAt: string
     isDeleted?: boolean
+    modifiedAt?: string
 }

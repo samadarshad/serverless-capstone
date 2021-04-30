@@ -1,12 +1,12 @@
 import 'source-map-support/register';
-import { OnMessageAction } from 'src/requests/onMessageAction';
+import { OnMessageAction, OnMessageActionInternal } from 'src/requests/onMessageAction';
 import { createSns } from 'src/utils/sns';
 
 const sns = createSns()
 const messagesTopicArn = process.env.MESSAGES_TOPIC_ARN
 
 export async function publishMessageInternally(connectionId: string, request: OnMessageAction) {
-    let payload: OnMessageAction
+    let payload: OnMessageActionInternal
 
     if (!request.postedAt) {
         // new message
@@ -19,7 +19,8 @@ export async function publishMessageInternally(connectionId: string, request: On
         // edit message
         payload = {
             ...request,
-            connectionId
+            connectionId,
+            modifiedAt: new Date().toISOString()
         }
     }
 
@@ -31,3 +32,4 @@ export async function publishMessageInternally(connectionId: string, request: On
         TopicArn: messagesTopicArn,
     }).promise()
 }
+
