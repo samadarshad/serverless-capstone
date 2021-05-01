@@ -7,20 +7,21 @@ const messagesTopicArn = process.env.MESSAGES_TOPIC_ARN
 
 export async function publishMessageInternally(connectionId: string, request: OnMessageAction) {
     let payload: OnMessageActionInternal
-
+    const timestamp = new Date().toISOString()
     if (!request.postedAt) {
-        // new message
+        // new message        
         payload = {
             ...request,
             connectionId,
-            postedAt: new Date().toISOString(),
+            postedAt: timestamp,
+            modifiedAt: timestamp
         }
     } else {
         // edit message
         payload = {
             ...request,
             connectionId,
-            modifiedAt: new Date().toISOString()
+            modifiedAt: timestamp
         }
     }
 
