@@ -9,10 +9,6 @@ export default {
                         AttributeType: 'S'
                     },
                     {
-                        AttributeName: 'userId',
-                        AttributeType: 'S'
-                    },
-                    {
                         AttributeName: 'room',
                         AttributeType: 'S'
                     },
@@ -27,18 +23,6 @@ export default {
                 TableName: "${self:provider.environment.CONNECTIONS_TABLE}",
                 GlobalSecondaryIndexes: [
                     {
-                        IndexName: "${self:provider.environment.USER_ID_INDEX}",
-                        KeySchema: [
-                            {
-                                AttributeName: 'userId',
-                                KeyType: 'HASH'
-                            }
-                        ],
-                        Projection: {
-                            ProjectionType: 'ALL'
-                        }
-                    },
-                    {
                         IndexName: "${self:provider.environment.ROOM_INDEX}",
                         KeySchema: [
                             {
@@ -51,33 +35,6 @@ export default {
                         }
                     }
                 ]
-            }
-        },
-        'MessagesDynamoDBTable': {
-            Type: 'AWS::DynamoDB::Table',
-            Properties: {
-                AttributeDefinitions: [
-                    {
-                        AttributeName: 'room',
-                        AttributeType: 'S'
-                    },
-                    {
-                        AttributeName: 'postedAt',
-                        AttributeType: 'S'
-                    },
-                ],
-                KeySchema: [
-                    {
-                        AttributeName: 'room',
-                        KeyType: 'HASH'
-                    },
-                    {
-                        AttributeName: 'postedAt',
-                        KeyType: 'RANGE'
-                    }
-                ],
-                BillingMode: 'PAY_PER_REQUEST',
-                TableName: "${self:provider.environment.MESSAGES_TABLE}"
             }
         },
         'GatewayResponseDefault4XX': {

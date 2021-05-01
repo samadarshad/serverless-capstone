@@ -10,7 +10,6 @@ export class ConnectionsAccess {
     constructor(
         private readonly docClient: DocumentClient = createDynamoDBClient(),
         private readonly connectionsTable = process.env.CONNECTIONS_TABLE,
-        private readonly userIdIndex = process.env.USER_ID_INDEX,
         private readonly roomIndex = process.env.ROOM_INDEX
 
     ) { }

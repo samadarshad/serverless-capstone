@@ -1,5 +1,6 @@
 import { ApiGatewayManagementApi } from 'aws-sdk';
-import { SendMessageResponse } from 'src/responses/sendMessageResponse';
+import { StatusCodes } from 'http-status-codes';
+import { OnMessageActionInternal } from 'src/requests/onMessageAction';
 import { createApiGateway } from 'src/utils/apiGateway';
 import { ErrorResponse } from '../responses/errorResponse';
 import { createLogger } from '../utils/logger';
@@ -8,12 +9,26 @@ const logger = createLogger('ClientApi')
 
 export class ClientApi {
     constructor(
-        private readonly apiGateway: ApiGatewayManagementApi = createApiGateway(),
+        private readonly connectionId: string = '',
+        private readonly apiGateway: ApiGatewayManagementApi = createApiGateway()
     ) { }
 
-    async sendMessage(connectionId: string, payload: SendMessageResponse | ErrorResponse) {
-        logger.info('sendMessageToClient', {
-            connectionId,
+    async sendMessage(payload: OnMessageActionInternal | ErrorResponse) {
+        logger.info('sendMessage', {
+            connectionId: this.connectionId,
+            payload
+        })
+
+        await this.apiGateway.postToConnection({
+            ConnectionId: this.connectionId,
+            Data: JSON.stringify(payload)
+        }).promise()
+
+    }
+
+    async sendMessageToConnection(connectionId: string, payload: OnMessageActionInternal | ErrorResponse) {
+        logger.info('sendMessageToConnection', {
+            connectionId: connectionId,
             payload
         })
 
@@ -21,6 +36,13 @@ export class ClientApi {
             ConnectionId: connectionId,
             Data: JSON.stringify(payload)
         }).promise()
+    }
 
+    async ok() {
+        await this.sendMessage({
+            statusCode: StatusCodes.OK,
+            body: ''
+        })
+        return
     }
 }

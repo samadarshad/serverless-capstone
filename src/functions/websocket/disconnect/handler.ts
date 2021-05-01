@@ -8,9 +8,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const connectionId = event.requestContext.connectionId
     await logout(connectionId)
 
-    return {
-        statusCode: 200,
-        body: ''
-    }
+    return
 }
 

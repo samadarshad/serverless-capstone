@@ -1,4 +1,4 @@
-import { OnJoin } from '@models/onJoin'
+import { Connection } from '@models/Connection'
 import { ClientApi } from 'src/dataLayer/clientApi'
 import { ConnectionsAccess } from 'src/dataLayer/connectionsAccess'
 import { OnJoinRequest } from 'src/requests/onJoinRequest'
@@ -8,25 +8,16 @@ const connectionsAccess = new ConnectionsAccess()
 const clientApi = new ClientApi()
 
 export async function broadcastMessageToRoom(request: OnMessageActionInternal) {
-    // const { name, userId } = await connectionsAccess.get(request.connectionId)
-    // const payload: SendMessageResponse = {
-    //     ...request,
-    //     name,
-    //     userId
-    // }
-
     const connections = await connectionsAccess.getByRoom(request.room)
-
     for (const connection of connections) {
-        await clientApi.sendMessage(connection.connectionId, request)
+        await clientApi.sendMessageToConnection(connection.connectionId, request)
     }
 }
 
 export async function joinRoom(connectionId: string, request: OnJoinRequest) {
-    const join: OnJoin = {
+    const connectionRequest: Connection = {
         connectionId,
         ...request
     }
-
-    await connectionsAccess.joinRoom(join)
+    await connectionsAccess.joinRoom(connectionRequest)
 }

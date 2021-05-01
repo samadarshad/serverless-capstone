@@ -8,10 +8,17 @@ export const OnMessageAction = t.iface([], {
   "room": "string",
   "message": t.opt("string"),
   "postedAt": t.opt("string"),
+  "name": t.opt("string"),
   "isDeleted": t.opt("boolean"),
+  "userId": t.opt("string"),
+});
+
+export const OnMessageActionInternal = t.iface(["OnMessageAction"], {
+  "modifiedAt": t.opt("string"),
 });
 
 const exportedTypeSuite: t.ITypeSuite = {
   OnMessageAction,
+  OnMessageActionInternal,
 };
 export default exportedTypeSuite;

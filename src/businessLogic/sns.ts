@@ -5,7 +5,7 @@ import { createSns } from 'src/utils/sns';
 const sns = createSns()
 const messagesTopicArn = process.env.MESSAGES_TOPIC_ARN
 
-export async function publishMessageInternally(userId: string, request: OnMessageAction) {
+const createPayload = (request, userId): string => {
     let payload: OnMessageActionInternal
     const timestamp = new Date().toISOString()
     if (!request.postedAt) {
@@ -24,6 +24,12 @@ export async function publishMessageInternally(userId: string, request: OnMessag
             modifiedAt: timestamp
         }
     }
+
+    return payload
+}
+
+export async function publishMessageInternally(userId: string, request: OnMessageAction) {
+    const payload = createPayload(request, userId)
 
     await sns.publish({
         Message: JSON.stringify({
