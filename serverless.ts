@@ -1,6 +1,9 @@
-import hello from '@functions/hello';
-import type { AWS } from '@serverless/typescript';
 
+import type { AWS } from '@serverless/typescript';
+import environment from 'environment';
+import functions from 'functions';
+import plugins from 'plugins';
+import resources from 'resources';
 
 const serverlessConfiguration: AWS = {
   service: 'serverless-capstone',
@@ -12,8 +15,28 @@ const serverlessConfiguration: AWS = {
       webpackConfig: './webpack.config.js',
       includeModules: true,
     },
+    'serverless-offline': {
+      httpPort: 3003
+    },
+    dynamodb: {
+      start: {
+        port: 8000,
+        inMemory: true,
+        migrate: true
+      },
+      stages: [
+        'dev'
+      ]
+    },
+    'serverless-offline-sns': {
+      port: 4002,
+      debug: false,
+      accountId: 324941539183
+    },
+    messagesTopicArn: "arn:aws:sns:${self:provider.region}:${self:provider.environment.accountId}:${self:provider.environment.MESSAGES_TOPIC}",
+    deploytime: "${file(./gettime.js)}"
   },
-  plugins: ['serverless-webpack'],
+  plugins,
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -24,13 +47,12 @@ const serverlessConfiguration: AWS = {
     // @ts-ignore
     region: "${opt:region, 'eu-west-2'}",
     stage: "${opt:stage, 'dev'}",
-    environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-    },
+    environment,
     lambdaHashingVersion: '20201221',
   },
   // import the function via paths
-  functions: { hello },
+  functions,
+  resources
 };
 
 module.exports = serverlessConfiguration;
