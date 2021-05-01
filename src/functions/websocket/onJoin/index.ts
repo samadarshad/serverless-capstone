@@ -21,9 +21,17 @@ export default {
       Effect: 'Allow',
       Action: [
         'dynamodb:UpdateItem',
+        'dynamodb:DeleteItem'
       ],
       Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}'
     },
+    {
+      Action: [
+        'execute-api:*'
+      ],
+      Effect: 'Allow',
+      Resource: '*'
+    }
   ]
 
 }

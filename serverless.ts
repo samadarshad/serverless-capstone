@@ -34,6 +34,7 @@ const serverlessConfiguration: AWS = {
       accountId: 324941539183
     },
     messagesTopicArn: "arn:aws:sns:${self:provider.region}:${self:provider.environment.accountId}:${self:provider.environment.MESSAGES_TOPIC}",
+    deploytime: "${file(./gettime.js)}"
   },
   plugins,
   provider: {

@@ -26,10 +26,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
 
     try {
         await joinRoom(connectionId, request)
-        await clientApi.ok()
-        return
+        return await clientApi.ok()
     } catch (error) {
         await clientApi.sendMessage(errorToHttp(error))
-        return
+        return errorToHttp(error)
     }
 }

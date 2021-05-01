@@ -35,10 +35,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         authorize(request, userId)
         await publishMessageInternally(userId, request)
 
-        await clientApi.ok()
-        return
+        return await clientApi.ok()
     } catch (error) {
         await clientApi.sendMessage(errorToHttp(error))
-        return
+        return errorToHttp(error)
     }
 }

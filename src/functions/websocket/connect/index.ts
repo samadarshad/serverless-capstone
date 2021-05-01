@@ -17,6 +17,13 @@ export default {
         'dynamodb:PutItem',
       ],
       Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}'
+    },
+    {
+      Action: [
+        'execute-api:*'
+      ],
+      Effect: 'Allow',
+      Resource: '*'
     }
   ]
 }

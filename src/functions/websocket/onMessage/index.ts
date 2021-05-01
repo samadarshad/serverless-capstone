@@ -21,10 +21,25 @@ export default {
     {
       Effect: 'Allow',
       Action: [
+        'dynamodb:Query',
+        'dynamodb:DeleteItem'
+      ],
+      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}'
+    },
+    {
+      Effect: 'Allow',
+      Action: [
         'SNS:Publish',
       ],
       Resource: "${self:custom.messagesTopicArn}"
     },
+    {
+      Action: [
+        'execute-api:*'
+      ],
+      Effect: 'Allow',
+      Resource: '*'
+    }
   ]
 
 }

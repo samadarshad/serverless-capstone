@@ -13,11 +13,10 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         const jwtToken = await verifyToken(event.queryStringParameters.token)
         const userId = jwtToken.sub
         await login(connectionId, userId)
-        await clientApi.ok()
-        return
+        return await clientApi.ok()
     } catch (error) {
         await clientApi.sendMessage(errorToHttp(error))
-        return
+        return errorToHttp(error)
     }
 }
 
