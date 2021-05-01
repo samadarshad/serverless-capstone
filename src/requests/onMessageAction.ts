@@ -7,6 +7,5 @@ export interface OnMessageAction {
 }
 
 export interface OnMessageActionInternal extends OnMessageAction {
-    connectionId: string,
     modifiedAt?: string
 }

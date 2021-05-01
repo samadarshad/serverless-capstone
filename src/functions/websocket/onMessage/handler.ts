@@ -14,10 +14,8 @@ const clientApi = new ClientApi()
 const connectionsAccess = new ConnectionsAccess()
 const requiresAuthorization = (request: OnMessageAction) => request.postedAt ? true : false
 
-const userIsAuthorized = async (connectionId: string, request: OnMessageAction) => {
-    const connection = await connectionsAccess.getByConnectionId(connectionId)
-    const user = connection.userId
-    return (request.userId === user)
+const userIsAuthorized = async (userId: string, request: OnMessageAction) => {
+    return (request.userId === userId)
 }
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -35,7 +33,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         return
     }
 
-    if (requiresAuthorization(request) && ! await userIsAuthorized(connectionId, request)) {
+    const userId = (await connectionsAccess.getByConnectionId(connectionId)).userId
+
+    if (requiresAuthorization(request) && ! await userIsAuthorized(userId, request)) {
         await clientApi.sendMessage(connectionId, {
             statusCode: StatusCodes.UNAUTHORIZED,
             body: ReasonPhrases.UNAUTHORIZED
@@ -44,7 +44,7 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     }
 
     try {
-        await publishMessageInternally(connectionId, request)
+        await publishMessageInternally(userId, request)
     } catch (error) {
         await clientApi.sendMessage(connectionId, errorToHttp(error))
         return
