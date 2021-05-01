@@ -10,7 +10,7 @@ const logger = createLogger('ClientApi')
 
 export class ClientApi {
     constructor(
-        private readonly connectionId: string = '',
+        private readonly connectionId: string = 'NO_CONNECTION_ID',
         private readonly apiGateway: ApiGatewayManagementApi = createApiGateway(),
         private readonly connectionsAccess = new ConnectionsAccess()
     ) { }
@@ -19,27 +19,22 @@ export class ClientApi {
         this.sendMessageToConnection(this.connectionId, payload)
     }
 
-    async sendMessageToConnection(connectionId: string, payload: OnMessageActionInternal | ErrorResponse) {
+    async sendMessageToConnection(inputConnectionId: string, payload: OnMessageActionInternal | ErrorResponse) {
         logger.info('sendMessageToConnection', {
-            connectionId: connectionId,
+            connectionId: inputConnectionId,
             payload
         })
 
-        await this.apiGateway.postToConnection({
-            ConnectionId: connectionId,
-            Data: JSON.stringify(payload)
-        }).promise()
-
         try {
             await this.apiGateway.postToConnection({
-                ConnectionId: this.connectionId,
+                ConnectionId: inputConnectionId,
                 Data: JSON.stringify(payload)
             }).promise()
         } catch (error) {
             console.log('Failed to send message', JSON.stringify(error));
             if (error.statusCode === 410) {
                 console.log('Stale connection');
-                await this.connectionsAccess.deleteConnection(this.connectionId)
+                await this.connectionsAccess.deleteConnection(inputConnectionId)
             }
         }
     }
