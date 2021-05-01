@@ -20,8 +20,17 @@ export default {
       Effect: 'Allow',
       Action: [
         'dynamodb:Scan',
+        'dynamodb:Query',
+        'dynamodb:DeleteItem'
       ],
       Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}'
+    },
+    {
+      Effect: 'Allow',
+      Action: [
+        'dynamodb:Query'
+      ],
+      Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.CONNECTIONS_TABLE}/index/${self:provider.environment.ROOM_INDEX}'
     },
     {
       Effect: 'Allow',

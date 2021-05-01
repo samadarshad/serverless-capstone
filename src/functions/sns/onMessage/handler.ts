@@ -6,6 +6,7 @@ import { broadcastMessageToRoom } from '../../../businessLogic/chat';
 
 export const handler: SNSHandler = async (event: SNSEvent) => {
     const request: OnMessageActionInternal = JSON.parse(event.Records[0].Sns.Message)
+    console.log('Sns onMessage: ', request)
 
     await broadcastMessageToRoom(request)
 }
