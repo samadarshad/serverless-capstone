@@ -49,6 +49,10 @@ const serverlessConfiguration: AWS = {
     stage: "${opt:stage, 'dev'}",
     environment,
     lambdaHashingVersion: '20201221',
+    tracing: {
+      lambda: true,
+      apiGateway: true
+    },
   },
   // import the function via paths
   functions,
